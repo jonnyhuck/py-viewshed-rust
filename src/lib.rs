@@ -1,7 +1,6 @@
 use std::f32;
 use numpy::PyArray2;
 use pyo3::prelude::*;
-// use rayon::prelude::*;
 use pyo3::types::PyTuple;
 use numpy::ndarray::{Array2, Dim}; // do not use ndarray directly!!
 
@@ -102,15 +101,10 @@ fn viewshed(py: Python, x0: f32, y0: f32, radius_m: f32, observer_height: f32, t
     let mut output = Array2::<i32>::zeros(Dim((*height, *width)));
     output[(r0 as usize, c0 as usize)] = 1;
 
-    run a line of sight to each point in the perimeter
+    // run a line of sight to each point in the perimeter
     for (r, c) in circle_perimeter(r0, c0, radius_px * 3) { // TODO: is *3 necessary / best?
         line_of_sight(r0, c0, height0, r, c, target_height, radius_px as f32, &dem_data, *height, *width, &mut output);
     }
-    // circle_perimeter(r0, c0, radius_px * 3)
-    // .par_iter()
-    // .for_each(|&(r, c)| {
-    //     line_of_sight(r0, c0, height0, r, c, target_height, radius_px as f32, &dem_data, *height, *width, &mut output);
-    // });
 
     // Convert to PyArray2 and return
     let output_array = PyArray2::<i32>::from_owned_array(py, output);
