@@ -1,3 +1,6 @@
+/**
+ * This version is parallel using synchronisation
+ */
 use std::f32;
 use numpy::PyArray2;
 use pyo3::prelude::*;
@@ -85,7 +88,7 @@ fn viewshed(
     let height0 = dem_data[(r0 as usize, c0 as usize)] + observer_height;
 
     // Use AtomicBool array for output
-    let output = Array2::from_shape_fn((height, width), |_| AtomicBool::new(false));
+    let output = Array2::from_shape_fn(Dim((*height, *width)), |_| AtomicBool::new(false));
     output[(r0 as usize, c0 as usize)].store(true, Ordering::Relaxed);
 
     circle_perimeter(r0, c0, radius_px * 3)
