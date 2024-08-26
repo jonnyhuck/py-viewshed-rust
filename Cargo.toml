@@ -1,0 +1,16 @@
+[package]
+name = "rust_viewshed"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+numpy = "0.21"
+rayon = "1.10"   
+
+[lib]
+name = "rust_viewshed"
+crate-type = ["cdylib"]
+
+[package.metadata.maturin]
+name = "rust_viewshed"
